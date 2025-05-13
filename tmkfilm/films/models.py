@@ -3,24 +3,7 @@ from PIL import Image
 from io import BytesIO
 import base64
 
-# Миксин для обработки изображений
-class ImageProcessingMixin:
-    def save(self, *args, **kwargs):
-        if self.image and (not hasattr(self, '_image_hash') or self.image != self._image_hash):
-            try:
-                img = Image.open(self.image)
-                buffer = BytesIO()
-                img_format = img.format.lower()
-                img.save(buffer, format=img_format)
-                image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
-                self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
-                self._image_hash = self.image  # Сохраняем хэш для проверки изменений
-            except Exception as e:
-                print(f"Ошибка обработки изображения: {e}")
-        super().save(*args, **kwargs)
-
-# Абстрактный базовый класс для мультиязычных полей
-class MultilingualModel(models.Model, ImageProcessingMixin):
+class MultilingualModel(models.Model):
     image = models.ImageField(
         null=False,
         blank=False,
@@ -34,7 +17,19 @@ class MultilingualModel(models.Model, ImageProcessingMixin):
         verbose_name="Не трогать это поле!",
         help_text="Не трогать это поле!"
     )
+    def save(self, *args, **kwargs):
+        if self.image:
+            img = Image.open(self.image)
+            buffer = BytesIO()
+            img_format = img.format.lower()
+            img.save(buffer, format=img_format)
 
+            image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+            self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
+
+
+        super().save(*args, **kwargs)
     class Meta:
         abstract = True
 
@@ -134,25 +129,22 @@ class PersonModel(MultilingualModel):
     class Meta:
         abstract = True
 
-# Модель для актёров
 class Actors(PersonModel):
     class Meta:
         verbose_name = "Актёр"
         verbose_name_plural = "Актёры"
 
-# Модель для сценаристов
 class Screenwriter(PersonModel):
     class Meta:
         verbose_name = "Сценарист"
         verbose_name_plural = "Сценаристы"
 
-# Модель для режиссёров
 class Director(PersonModel):
     class Meta:
         verbose_name = "Режиссёр"
         verbose_name_plural = "Режиссёры"
 
-# Модель для фильмов
+
 class Film(MultilingualModel):
     name_rus = models.CharField(
         max_length=200,
@@ -195,7 +187,7 @@ class Film(MultilingualModel):
     )
     actors = models.ManyToManyField(Actors, related_name="Films")
     screenwriters = models.ManyToManyField(Screenwriter, related_name="Films")
-    director = models.ForeignKey(Director, on_delete=models.SET_NULL, null=True, related_name="Films")
+    director = models.ManyToManyField(Director,related_name="Films")
 
     def __str__(self):
         return self.name_rus
@@ -204,7 +196,6 @@ class Film(MultilingualModel):
         verbose_name = "Фильм"
         verbose_name_plural = "Фильмы"
 
-# Модель для новостей
 class News(MultilingualModel):
     title_rus = models.CharField(
         max_length=200,
@@ -259,7 +250,6 @@ class News(MultilingualModel):
         verbose_name = "Новость"
         verbose_name_plural = "Новости"
 
-# Модель для истории студии
 class StudioHistory(MultilingualModel):
     text_rus = models.TextField(
         null=False,
