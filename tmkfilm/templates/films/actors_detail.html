@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ actor.name_rus }} {{ actor.surname_rus }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .actor-info { display: flex; gap: 20px; }
+        .actor-info img { max-width: 300px; height: auto; }
+        .films-list { margin-top: 20px; }
+        .film-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>{{ actor.name_rus }} {{ actor.surname_rus }}</h1>
+    <div class="actor-info">
+        {% if actor.image_base64 %}
+            <img src="{{ actor.image_base64 }}" alt="{{ actor.name_rus }}">
+        {% else %}
+            <p>Изображение отсутствует</p>
+        {% endif %}
+        <div>
+            <p><strong>Имя (русский):</strong> {{ actor.name_rus }}</p>
+            <p><strong>Имя (английский):</strong> {{ actor.name_eng }}</p>
+            <p><strong>Имя (туркменский):</strong> {{ actor.name_tkm }}</p>
+            <p><strong>Фамилия (русский):</strong> {{ actor.surname_rus }}</p>
+            <p><strong>Фамилия (английский):</strong> {{ actor.surname_eng }}</p>
+            <p><strong>Фамилия (туркменский):</strong> {{ actor.surname_tkm }}</p>
+            <p><strong>Биография (русский):</strong> {{ actor.biography_rus }}</p>
+            <p><strong>Дата рождения:</strong> {{ actor.year }}</p>
+        </div>
+    </div>
+    <div class="films-list">
+        <h2>Фильмы</h2>
+        {% for film in films %}
+            <div class="film-card">
+                {% if film.image_base64 %}
+                    <img src="{{ film.image_base64 }}" alt="{{ film.name_rus }}" width="100">
+                {% else %}
+                    <p>Изображение отсутствует</p>
+                {% endif %}
+                <h3><a href="{% url 'film_detail' film.id %}">{{ film.name_rus }}</a></h3>
+                <p>{{ film.description_rus }}</p>
+            </div>
+        {% empty %}
+            <p>Фильмы не найдены.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

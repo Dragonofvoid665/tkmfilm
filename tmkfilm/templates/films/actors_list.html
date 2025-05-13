@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список актёров</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .actor-list { display: flex; flex-wrap: wrap; gap: 20px; }
+        .actor-card { border: 1px solid #ccc; padding: 10px; width: 200px; text-align: center; }
+        .actor-card img { max-width: 100%; height: auto; }
+        a { text-decoration: none; color: #007bff; }
+        a:hover { text-decoration: underline; }
+    </style>    
+</head>
+<body>
+    <h1>СCat actors</h1>
+    <div class="actor-list">
+        {% for actor in actors %}
+            <div class="actor-card">
+                {% if actor.image_base64 %}
+                    <img src="{{ actor.image_base64 }}" alt="{{ actor.name_rus }}" width="150">
+                {% else %}
+                    <p>Изображение отсутствует</p>
+                {% endif %}
+                <h3><a href="{% url 'actor_detail' actor.id %}">{{ actor.name_rus }} {{ actor.surname_rus }}</a></h3>
+            </div>
+        {% empty %}
+            <p>Актёры не найдены.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

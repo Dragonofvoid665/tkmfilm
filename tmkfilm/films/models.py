@@ -1,12 +1,9 @@
 from django.db import models
-
-from django.db import models
 from PIL import Image
 from io import BytesIO
 import base64
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
-
 
 class Actors(models.Model):
     image = models.ImageField(
@@ -124,24 +121,34 @@ class Actors(models.Model):
 
     def __str__(self):
         return f"{self.name_rus} {self.surname_rus}"
+
     class Meta:
-        verbose_name = 'Основная категория'
+        verbose_name = 'Актеры'
 
     def save(self, *args, **kwargs):
         if self.image:
             img = Image.open(self.image)
             buffer = BytesIO()
-            img_format = img.format.lower()  
+            img_format = img.format.lower()
             img.save(buffer, format=img_format)
-            
             image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
-            
             self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
-
-            
         super().save(*args, **kwargs)
 
 class Film(models.Model):
+    image = models.ImageField(
+        null=False,
+        blank=False,
+        upload_to="static/images/",
+        verbose_name='Фотография фильма',
+        help_text="Ставьте небольшого объема картинки. Нельзя оставить пустым!",
+    )
+    image_base64 = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Не трогать это поле!',
+        help_text="Не трогать это поле!"
+    )
     name_rus = models.CharField(
         max_length=250,
         null=False,
@@ -187,15 +194,14 @@ class Film(models.Model):
     actors = models.ManyToManyField(Actors, related_name='Films')
 
     def __str__(self):
-        return self.name
-    
+        return self.name_rus
+
     def save(self, *args, **kwargs):
         if self.image:
             img = Image.open(self.image)
             buffer = BytesIO()
-            img_format = img.format.lower()  
+            img_format = img.format.lower()
             img.save(buffer, format=img_format)
-            
             image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
-            
             self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
+        super().save(*args, **kwargs)
