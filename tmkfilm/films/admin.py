@@ -5,9 +5,9 @@ from django.utils.html import format_html
 @admin.register(Actors)
 class ActorAdmin(admin.ModelAdmin):
     exclude = ['image_base64']
-    list_display = ['id', 'name_rus', 'name_eng', 'name_tkm', 'surname_rus', 'surname_tkm', 'surname_eng', 'father_name_rus', 'father_name_tkm', 'father_name_eng', 'picture', 'picture_size', 'year']
-    search_fields = ['name_rus', 'name_eng', 'name_tkm', 'surname_rus', 'surname_tkm', 'surname_eng', 'father_name_rus', 'father_name_tkm', 'father_name_eng', 'year']
-    # filter_horizontal = ('Films',)  # Для обратного отношения
+    list_display = ['id', 'name_rus', 'name_eng', 'name_tkm', 'surname_rus', 'surname_tkm', 'surname_eng', 'father_name_rus', 'father_name_tkm', 'father_name_eng', 'picture', 'picture_size', 'birth_date']
+    search_fields = ['name_rus', 'name_eng', 'name_tkm', 'surname_rus', 'surname_tkm', 'surname_eng', 'father_name_rus', 'father_name_tkm', 'father_name_eng', 'birth_date']
+    # filter_horizontal = ('films',)  # Для обратного отношения
 
     def picture(self, obj: Actors):
         return format_html(f'<img src="{obj.image_base64}" width="200px">')
