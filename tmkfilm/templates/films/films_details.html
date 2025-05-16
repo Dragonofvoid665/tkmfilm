@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>{{ film.name_rus }}</title>
+    <title>Film details</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         .film-info { display: flex; gap: 20px; }
@@ -40,6 +40,40 @@
                     <p>Изображение отсутствует</p>
                 {% endif %}
                 <h3><a href="{% url 'actor_detail' actor.id %}">{{ actor.name_rus }} {{ actor.surname_rus }}</a></h3>
+            </div>
+        {% empty %}
+            <p>Актёры не найдены.</p>
+        {% endfor %}
+    </div>
+    <br>
+    <br>
+    <div class="actors-list">
+        <h2>Сценаристы</h2>
+        {% for screenwriter in screenwriters %}
+            <div class="actor-card">
+                {% if screenwriter.image_base64 %}
+                    <img src="{{ screenwriter.image_base64 }}" alt="{{ screenwriter.name_rus }}" width="100">
+                {% else %}
+                    <p>Изображение отсутствует</p>
+                {% endif %}
+                <h3><a href="{% url 'screenwriter_detail' screenwriter.id %}">{{ screenwriter.name_rus }} {{ screenwriter.surname_rus }}</a></h3>
+            </div>
+        {% empty %}
+            <p>Актёры не найдены.</p>
+        {% endfor %}
+    </div>
+    <br>
+    <br>
+    <div class="actors-list">
+        <h2>Режиссёры</h2>
+        {% for director in directors %}
+            <div class="actor-card">
+                {% if director.image_base64 %}
+                    <img src="{{ director.image_base64 }}" alt="{{ director.name_rus }}" width="100">
+                {% else %}
+                    <p>Изображение отсутствует</p>
+                {% endif %}
+                <h3><a href="{% url 'director_detail' director.id %}">{{ director.name_rus }} {{ director.surname_rus }}</a></h3>
             </div>
         {% empty %}
             <p>Актёры не найдены.</p>

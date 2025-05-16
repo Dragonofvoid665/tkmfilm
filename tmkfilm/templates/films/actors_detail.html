@@ -42,7 +42,6 @@
                     <p>Изображение отсутствует</p>
                 {% endif %}
                 <h3><a href="{% url 'film_detail' film.id %}">{{ film.name_rus }}</a></h3>
-                <p>{{ film.description_rus }}</p>
             </div>
         {% empty %}
             <p>Фильмы не найдены.</p>
