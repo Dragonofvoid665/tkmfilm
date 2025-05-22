@@ -19,7 +19,7 @@ class ScreenwriterAdmin(admin.ModelAdmin):
 @admin.register(Film)
 class FilmAdmin(admin.ModelAdmin):
     list_display = ['id', 'name_rus', 'name_eng', 'name_tkm', 'description_rus', 'description_eng', 'description_tkm', 'image']
-    search_fields = ['name_rus', 'name_eng', 'name_tkm', 'description_rus', 'description_eng', 'description_tkm','genre_eng','genre_tkm','genre_rus']
+    search_fields = ['name_rus', 'name_eng', 'name_tkm', 'description_rus', 'description_eng', 'description_tkm','genre_eng','genre_tkm','genre_rus','sssr_or_not']
     filter_horizontal = ('actors','screenwriters','director',)
 
 

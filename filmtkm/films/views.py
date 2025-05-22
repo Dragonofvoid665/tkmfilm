@@ -10,6 +10,10 @@ class Actorlist(ListAPIView):
     queryset = Actors.objects.all()
     serializer_class = ActorlistSerializers
 
+class Filmlist(ListAPIView):
+    queryset = Film.objects.all()
+    serializer_class = FilmlistSerializers
+
 class Screenwriterlist(ListAPIView):
     queryset = Screenwriter.objects.all()
     serializer_class = ScreenwriterlistSerializers
@@ -44,6 +48,12 @@ def Actordetail(request, actor_id):
 def Newsdetail(request, new_id):
     news = get_object_or_404(News, id=new_id)
     serializer = NewsdetailSerializers(news)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def Filmsdetail(request, film_id):
+    films = get_object_or_404(Film, id=film_id)
+    serializer = FilmdetailSerializers(films)
     return Response(serializer.data)
 
 @api_view(['GET'])

@@ -6,10 +6,6 @@ class FilmlistSerializers(serializers.ModelSerializer):
         model = Film
         fields = ['id','image','name_rus','name_eng','name_tkm','genre_rus','genre_eng','genre_tkm']
 
-class FilmdetailSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Film
-        fields = '__all__'
 
 class ActorlistSerializers(serializers.ModelSerializer):
     class Meta:
@@ -65,6 +61,17 @@ class CreatorSerializers(serializers.ModelSerializer):
     class Meta:
         model = StudioHistory
         fields = ['creator_bio_rus', 'creator_bio_eng', 'creator_bio_tkm','creator_birth_date']
+
+
+class FilmdetailSerializers(serializers.ModelSerializer):
+    screenwriters = ScreenwriterlistSerializers(many=True, read_only=True)
+    actors = ActorlistSerializers(many=True, read_only=True)
+    directors = DirectorlistSerializers(many=True, read_only=True)
+    
+    class Meta:
+        model = Film
+        fields = '__all__'
+
 
 class StudiohistorySSSRSerializers(serializers.ModelSerializer):
     creator_bio_rus = serializers.SerializerMethodField()

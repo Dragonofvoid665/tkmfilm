@@ -190,6 +190,12 @@ class Film(models.Model):
         verbose_name="Жанр фильма на туркменском",
         help_text="Нельзя оставить пустым"
     )
+    sssr_or_not = models.BooleanField(
+        default=False,
+        verbose_name="Снят при СССР или нет",
+        help_text="Нельзя оставлять пустым"
+
+    )
 
     actors = models.ManyToManyField(Actors, related_name="films")
     screenwriters = models.ManyToManyField(Screenwriter, related_name="films")
