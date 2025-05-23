@@ -66,7 +66,7 @@ class CreatorSerializers(serializers.ModelSerializer):
 class FilmdetailSerializers(serializers.ModelSerializer):
     screenwriters = ScreenwriterlistSerializers(many=True, read_only=True)
     actors = ActorlistSerializers(many=True, read_only=True)
-    directors = DirectorlistSerializers(many=True, read_only=True)
+    director = DirectorlistSerializers(many=True, read_only=True)
     
     class Meta:
         model = Film
