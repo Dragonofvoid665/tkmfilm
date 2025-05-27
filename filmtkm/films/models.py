@@ -1,13 +1,21 @@
 from django.db import models
+from PIL import Image
+from io import BytesIO
+import base64
+from django.core.validators import FileExtensionValidator
 
 class PersonModel(models.Model):
     image = models.ImageField(
         null=False,
         blank=False,
-        upload_to="media/images/",
+        upload_to="static/images/",
 
         verbose_name="Фотография",
         help_text="Нельзя оставить пустым!",
+    )
+    image_base64 = models.TextField(
+        blank=True,
+          null=True,
     )
     name_rus = models.CharField(
         max_length=100,
@@ -96,6 +104,13 @@ class PersonModel(models.Model):
         verbose_name="Дата рождения",
         help_text="Нельзя оставить пустым"
     )
+    location_of_birth = models.CharField(
+        default='Ashgabat',
+        max_length=100,
+        null=False,
+        blank=False,
+
+    )
     sssr_or_not = models.BooleanField(default=False)
 
     def __str__(self):
@@ -103,6 +118,20 @@ class PersonModel(models.Model):
 
     class Meta:
         abstract = True
+
+    def save(self, *args, **kwargs):
+        if self.image:
+            img = Image.open(self.image)
+            buffer = BytesIO()
+            img_format = img.format.lower()  # Получаем формат изображения (например, 'jpeg' или 'png')
+            img.save(buffer, format=img_format)
+            
+            image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            
+            self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
+
+            
+        super().save(*args, **kwargs)
 
 class Actors(PersonModel):
     class Meta:
@@ -125,10 +154,14 @@ class Film(models.Model):
     image = models.ImageField(
         null=False,
         blank=False,
-        upload_to="media/images/",
+        upload_to="static/images/",
 
         verbose_name="Фотография",
         help_text="Нельзя оставить пустым!",
+    )
+    image_base64 = models.TextField(
+        blank=True,
+          null=True,
     )
     name_rus = models.CharField(
         max_length=200,
@@ -200,7 +233,11 @@ class Film(models.Model):
     actors = models.ManyToManyField(Actors, related_name="films")
     screenwriters = models.ManyToManyField(Screenwriter, related_name="films")
     director = models.ManyToManyField(Director, related_name="films")
-
+    year = models.DateField(
+        default='1990-05-07',
+        null=False,
+        blank=False
+    )
     def __str__(self):
         return self.name_rus
 
@@ -208,14 +245,32 @@ class Film(models.Model):
         verbose_name = "Фильм"
         verbose_name_plural = "Фильмы"
 
+    def save(self, *args, **kwargs):
+        if self.image:
+            img = Image.open(self.image)
+            buffer = BytesIO()
+            img_format = img.format.lower()
+            img.save(buffer, format=img_format)
+            
+            image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            
+            self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
+            
+            
+        super().save(*args, **kwargs)
+    
 class News(models.Model):
     image = models.ImageField(
         null=False,
         blank=False,
-        upload_to="media/images/",
+        upload_to="static/images/",
 
         verbose_name="Фотография",
         help_text="Нельзя оставить пустым!",
+    )
+    image_base64 = models.TextField(
+        blank=True,
+          null=True,
     )
     title_rus = models.CharField(
         max_length=200,
@@ -288,13 +343,31 @@ class News(models.Model):
         verbose_name = "Новость"
         verbose_name_plural = "Новости"
 
+    def save(self, *args, **kwargs):
+        if self.image:
+            img = Image.open(self.image)
+            buffer = BytesIO()
+            img_format = img.format.lower()
+            img.save(buffer, format=img_format)
+            
+            image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            
+            self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
+            
+            
+        super().save(*args, **kwargs)
+
 class StudioHistory(models.Model):
     image = models.ImageField(
         null=False,
         blank=False,
-        upload_to="media/images/",
+        upload_to="static/images/",
         verbose_name="Фотография",
         help_text="Нельзя оставить пустым!",
+    )
+    image_base64 = models.TextField(
+        blank=True,
+          null=True,
     )
     text_rus = models.TextField(
         null=False,
@@ -352,13 +425,31 @@ class StudioHistory(models.Model):
         verbose_name = "История студии"
         verbose_name_plural = "История студии"
 
+    def save(self, *args, **kwargs):
+        if self.image:
+            img = Image.open(self.image)
+            buffer = BytesIO()
+            img_format = img.format.lower()
+            img.save(buffer, format=img_format)
+            
+            image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            
+            self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
+            
+            
+        super().save(*args, **kwargs)
+
 class StudioHistorySSSR(models.Model):
     image = models.ImageField(
         null=False,
         blank=False,
-        upload_to="media/images/",
+        upload_to="static/images/",
         verbose_name="Фотография",
         help_text="Нельзя оставить пустым!",
+    )
+    image_base64 = models.TextField(
+        blank=True,
+          null=True,
     )
     text_rus = models.TextField(
         null=False,
@@ -390,3 +481,17 @@ class StudioHistorySSSR(models.Model):
     class Meta:
         verbose_name = "История студии в времена СССР"
         verbose_name_plural = "История студии в времена СССР"
+
+    def save(self, *args, **kwargs):
+        if self.image:
+            img = Image.open(self.image)
+            buffer = BytesIO()
+            img_format = img.format.lower()
+            img.save(buffer, format=img_format)
+            
+            image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            
+            self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
+            
+            
+        super().save(*args, **kwargs)
