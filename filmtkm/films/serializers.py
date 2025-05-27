@@ -4,7 +4,7 @@ from films.models import *
 class FilmlistSerializers(serializers.ModelSerializer):
     class Meta:
         model = Film
-        fields = ['id','image','name_rus','name_eng','name_tkm','genre_rus','genre_eng','genre_tkm']
+        fields = ['id','image','name_rus','name_eng','name_tkm','genre_rus','genre_eng','genre_tkm','sssr_or_not']
 
 
 class ActorlistSerializers(serializers.ModelSerializer):
