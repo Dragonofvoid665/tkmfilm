@@ -1,10 +1,10 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from  films.models import *
+from rest_framework.decorators import api_view, APIView
+from rest_framework import status
+from films.models import *
 from .serializers import *
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import ListAPIView
-
 
 class Actorlist(ListAPIView):
     queryset = Actors.objects.all()
@@ -25,45 +25,45 @@ class Directorlist(ListAPIView):
 class Newslist(ListAPIView):
     queryset = News.objects.all()
     serializer_class = NewslistSerializers
-# --------------------------------------------------------------------------
+
 @api_view(['GET'])
 def Directordetail(request, director_id):
     director = get_object_or_404(Director, id=director_id)
-    serializer = DirectordetaileSerializers(director)
+    serializer = DirectordetaileSerializers(director, context={'request': request})
     return Response(serializer.data)
 
 @api_view(['GET'])
 def Screenwriterdetail(request, screenwriter_id):
     screenwriter = get_object_or_404(Screenwriter, id=screenwriter_id)
-    serializer = ScreenwriterdetaileSerializers(screenwriter)
+    serializer = ScreenwriterdetaileSerializers(screenwriter, context={'request': request})
     return Response(serializer.data)
 
 @api_view(['GET'])
 def Actordetail(request, actor_id):
     actor = get_object_or_404(Actors, id=actor_id)
-    serializer = ActordetaileSerializers(actor)
+    serializer = ActordetaileSerializers(actor, context={'request': request})
     return Response(serializer.data)
 
 @api_view(['GET'])
 def Newsdetail(request, new_id):
     news = get_object_or_404(News, id=new_id)
-    serializer = NewsdetailSerializers(news)
+    serializer = NewsdetailSerializers(news, context={'request': request})
     return Response(serializer.data)
 
 @api_view(['GET'])
 def Filmsdetail(request, film_id):
     films = get_object_or_404(Film, id=film_id)
-    serializer = FilmdetailSerializers(films)
+    serializer = FilmdetailSerializers(films, context={'request': request})
     return Response(serializer.data)
 
 @api_view(['GET'])
-def Studiohistory(requst):
+def Studiohistory(request):
     studiohistory = StudioHistory.objects.all() 
-    serializer = StudiohistorySerializers(studiohistory, many=True)
+    serializer = StudiohistorySerializers(studiohistory, many=True, context={'request': request})
     return Response(serializer.data)
 
 @api_view(['GET'])
-def StudiohistorySSSR(requst):
+def StudiohistorySSSR(request):
     studiohistorysssr = StudioHistorySSSR.objects.all() 
-    serializer = StudiohistorySSSRSerializers(studiohistorysssr, many=True)
+    serializer = StudiohistorySSSRSerializers(studiohistorysssr, many=True, context={'request': request})
     return Response(serializer.data)

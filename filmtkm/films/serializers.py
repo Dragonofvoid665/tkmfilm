@@ -4,37 +4,35 @@ from films.models import *
 class FilmlistSerializers(serializers.ModelSerializer):
     class Meta:
         model = Film
-        fields = ['id','image','name_rus','name_eng','name_tkm','genre_rus','genre_eng','genre_tkm','sssr_or_not']
-
+        fields = ['id', 'image', 'name_rus', 'name_en', 'name_tk', 'genre_ru', 'genre_en', 'genre_tk', 'sssr_or_not']
 
 class ActorlistSerializers(serializers.ModelSerializer):
     class Meta:
         model = Actors
-        fields = ['id','image','name_eng','name_rus','name_tkm','surname_eng','surname_rus','surname_tkm','father_name_eng','father_name_rus','father_name_tkm']
+        fields = ['id', 'name_eng', 'name_rus', 'name_tkm', 'surname_eng', 'surname_rus', 'surname_tkm', 'father_name_eng', 'father_name_rus', 'father_name_tkm', 'image']
 
 class ActordetaileSerializers(serializers.ModelSerializer):
     films = FilmlistSerializers(many=True, read_only=True)
     class Meta:
         model = Actors
         fields = '__all__'
-    
 
 class ScreenwriterlistSerializers(serializers.ModelSerializer):
     class Meta:
         model = Screenwriter
-        fields = ['id','image','name_eng','name_rus','name_tkm','surname_eng','surname_rus','surname_tkm','father_name_eng','father_name_rus','father_name_tkm']
+        fields = ['id', 'name_eng', 'name_rus', 'name_tkm', 'surname_eng', 'surname_rus', 'surname_tkm', 'father_name_eng', 'father_name_rus', 'father_name_tkm', 'image']
 
 class ScreenwriterdetaileSerializers(serializers.ModelSerializer):
     films = FilmlistSerializers(many=True, read_only=True)
     class Meta:
         model = Screenwriter
         fields = '__all__'
-    
 
 class DirectorlistSerializers(serializers.ModelSerializer):
     class Meta:
         model = Director
-        fields = ['id','image','name_eng','name_rus','name_tkm','surname_eng','surname_rus','surname_tkm','father_name_eng','father_name_rus','father_name_tkm']
+        fields = ['id', 'name_eng', 'name_rus', 'name_tkm', 'surname_eng', 'surname_rus', 'surname_tkm', 'father_name_eng', 'father_name_rus', 'father_name_tkm', 'image']
+
 
 class DirectordetaileSerializers(serializers.ModelSerializer):
     films = FilmlistSerializers(many=True, read_only=True)
@@ -42,15 +40,16 @@ class DirectordetaileSerializers(serializers.ModelSerializer):
         model = Director
         fields = '__all__'
     
+
 class NewslistSerializers(serializers.ModelSerializer):
     class Meta:
         model = News
-        fields = ['id','image','title_eng','title_rus','title_tkm','short_content_rus','short_content_eng','short_content_tkm','publication_date']
+        fields = ['id', 'image', 'title_eng', 'title_rus', 'title_tkm', 'short_content_rus', 'short_content_eng', 'short_content_tkm', 'publication_date']
 
 class NewsdetailSerializers(serializers.ModelSerializer):
     class Meta:
         model = News
-        fields = ['id','image','title_eng','title_rus','title_tkm','content_rus','content_eng','content_tkm','publication_date']
+        fields = ['id', 'title_eng', 'title_rus', 'title_tkm', 'content_rus', 'content_eng', 'content_tkm', 'publication_date']
 
 class StudiohistorySerializers(serializers.ModelSerializer):
     class Meta:
@@ -60,18 +59,16 @@ class StudiohistorySerializers(serializers.ModelSerializer):
 class CreatorSerializers(serializers.ModelSerializer):
     class Meta:
         model = StudioHistory
-        fields = ['creator_bio_rus', 'creator_bio_eng', 'creator_bio_tkm','creator_birth_date']
-
+        fields = ['creator_bio_rus', 'creator_bio_eng', 'creator_bio_tkm', 'creator_birth_date']
 
 class FilmdetailSerializers(serializers.ModelSerializer):
-    screenwriters = ScreenwriterlistSerializers(many=True, read_only=True)
+    screenwriter = ScreenwriterlistSerializers(read_only=True)  # Изменено: убрано many=True
     actors = ActorlistSerializers(many=True, read_only=True)
-    director = DirectorlistSerializers(many=True, read_only=True)
+    director = DirectorlistSerializers(read_only=True)  # Изменено: убрано many=True
     
     class Meta:
         model = Film
         fields = '__all__'
-
 
 class StudiohistorySSSRSerializers(serializers.ModelSerializer):
     creator_bio_rus = serializers.SerializerMethodField()
@@ -98,6 +95,3 @@ class StudiohistorySSSRSerializers(serializers.ModelSerializer):
     def get_creator_birth_date(self, obj):
         studio_history = StudioHistory.objects.first()
         return studio_history.creator_birth_date if studio_history else None
-
-
-

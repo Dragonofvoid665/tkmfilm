@@ -13,10 +13,6 @@ class PersonModel(models.Model):
         verbose_name="Фотография",
         help_text="Нельзя оставить пустым!",
     )
-    image_base64 = models.TextField(
-        blank=True,
-          null=True,
-    )
     name_rus = models.CharField(
         max_length=100,
         null=False,
@@ -104,15 +100,11 @@ class PersonModel(models.Model):
         verbose_name="Дата рождения",
         help_text="Нельзя оставить пустым"
     )
-    location_of_birth = models.CharField(
-        default='Ashgabat',
-        max_length=100,
-        null=False,
-        blank=False,
-
-    )
     sssr_or_not = models.BooleanField(default=False)
-
+    place_of_birth_eng = models.CharField(max_length=100, null=False, blank=False, default='Turkmenistan')
+    place_of_birth_rus = models.CharField(max_length=100, null=False, blank=False, default='Turkmenistan')
+    place_of_birth_tkm = models.CharField(max_length=100, null=False, blank=False, default='Turkmenistan')
+    
     def __str__(self):
         return f"{self.name_rus} {self.surname_rus}"
 
@@ -155,13 +147,8 @@ class Film(models.Model):
         null=False,
         blank=False,
         upload_to="static/images/",
-
         verbose_name="Фотография",
         help_text="Нельзя оставить пустым!",
-    )
-    image_base64 = models.TextField(
-        blank=True,
-          null=True,
     )
     name_rus = models.CharField(
         max_length=200,
@@ -170,53 +157,53 @@ class Film(models.Model):
         verbose_name="Название фильма на русском",
         help_text="Нельзя оставить пустым"
     )
-    name_eng = models.CharField(
+    name_en = models.CharField(
         max_length=200,
         null=False,
         blank=False,
         verbose_name="Название фильма на английском",
         help_text="Нельзя оставить пустым"
     )
-    name_tkm = models.CharField(
+    name_tk = models.CharField(
         max_length=200,
         null=False,
         blank=False,
         verbose_name="Название фильма на туркменском",
         help_text="Нельзя оставить пустым"
     )
-    description_rus = models.TextField(
+    description_ru = models.TextField(
         null=False,
         blank=False,
         verbose_name="Описание фильма на русском",
         help_text="Нельзя оставить пустым"
     )
-    description_eng = models.TextField(
+    description_en = models.TextField(
         null=False,
         blank=False,
         verbose_name="Описание фильма на английском",
         help_text="Нельзя оставить пустым"
     )
-    description_tkm = models.TextField(
+    description_tk = models.TextField(
         null=False,
         blank=False,
         verbose_name="Описание фильма на туркменском",
         help_text="Нельзя оставить пустым"
     )
-    genre_eng = models.CharField(
+    genre_en = models.CharField(
         max_length=100,
         null=False,
         blank=False,
-        verbose_name="Жанр фильма на анлийском",
+        verbose_name="Жанр фильма на английском",
         help_text="Нельзя оставить пустым"
     )
-    genre_rus = models.CharField(
+    genre_ru = models.CharField(
         max_length=100,
         null=False,
         blank=False,
         verbose_name="Жанр фильма на русском",
         help_text="Нельзя оставить пустым"
     )
-    genre_tkm = models.CharField(
+    genre_tk = models.CharField(
         max_length=100,
         null=False,
         blank=False,
@@ -227,17 +214,47 @@ class Film(models.Model):
         default=False,
         verbose_name="Снят при СССР или нет",
         help_text="Нельзя оставлять пустым"
-
     )
-
     actors = models.ManyToManyField(Actors, related_name="films")
-    screenwriters = models.ManyToManyField(Screenwriter, related_name="films")
+    screenwriter = models.ManyToManyField(Screenwriter, related_name="films")
     director = models.ManyToManyField(Director, related_name="films")
-    year = models.DateField(
-        default='1990-05-07',
+    year = models.IntegerField(
+        default=2020,
+        blank=False,
+        null=False)
+    kadr1 = models.ImageField(
+        default="static/images/25.jpg",
+        upload_to = "static/kadr/",
         null=False,
-        blank=False
+        blank=False,
+        verbose_name="Фотография",
+        help_text="Нельзя оставить пустым!",
     )
+    kadr2 = models.ImageField(
+        default="static/images/25.jpg",
+        upload_to = "static/kadr/",
+        null=False,
+        blank=False,
+        verbose_name="Фотография",
+        help_text="Нельзя оставить пустым!",
+    )
+    kadr3 = models.ImageField(
+        default="static/images/25.jpg",
+        upload_to = "static/kadr/",
+        null=False,
+        blank=False,
+        verbose_name="Фотография",
+        help_text="Нельзя оставить пустым!",
+    )
+    kadr4 = models.ImageField(
+        upload_to = "static/kadr/",
+        default="static/images/25.jpg",
+        null=False,
+        blank=False,
+        verbose_name="Фотография",
+        help_text="Нельзя оставить пустым!",
+    )
+    
     def __str__(self):
         return self.name_rus
 
@@ -251,12 +268,8 @@ class Film(models.Model):
             buffer = BytesIO()
             img_format = img.format.lower()
             img.save(buffer, format=img_format)
-            
             image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
-            
             self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
-            
-            
         super().save(*args, **kwargs)
     
 class News(models.Model):
@@ -264,13 +277,8 @@ class News(models.Model):
         null=False,
         blank=False,
         upload_to="static/images/",
-
         verbose_name="Фотография",
         help_text="Нельзя оставить пустым!",
-    )
-    image_base64 = models.TextField(
-        blank=True,
-          null=True,
     )
     title_rus = models.CharField(
         max_length=200,
@@ -365,10 +373,6 @@ class StudioHistory(models.Model):
         verbose_name="Фотография",
         help_text="Нельзя оставить пустым!",
     )
-    image_base64 = models.TextField(
-        blank=True,
-          null=True,
-    )
     text_rus = models.TextField(
         null=False,
         blank=False,
@@ -447,10 +451,6 @@ class StudioHistorySSSR(models.Model):
         verbose_name="Фотография",
         help_text="Нельзя оставить пустым!",
     )
-    image_base64 = models.TextField(
-        blank=True,
-          null=True,
-    )
     text_rus = models.TextField(
         null=False,
         blank=False,
@@ -495,3 +495,14 @@ class StudioHistorySSSR(models.Model):
             
             
         super().save(*args, **kwargs)
+
+class Trailer(models.Model):
+    video = models.FileField(
+        upload_to="static/video/",
+        verbose_name='Поставтье сюда трилер',
+        help_text='Сюдв можно зашружать только видео'
+    )
+    class Meta:
+        verbose_name = "Трилер"
+        verbose_name_plural = "Трилеры"
+
