@@ -87,9 +87,8 @@ class NewsAdmin(admin.ModelAdmin):
         
 @admin.register(StudioHistory)
 class StudioHistoryAdmin(admin.ModelAdmin):
-    list_display = ['id', 'picture','short_text_rus', 'short_text_eng', 'short_text_tkm', 'short_creator_bio_rus', 'short_creator_bio_eng', 'short_creator_bio_tkm', 'found_date', 'creator_birth_date']
-    def picture(self, obj:StudioHistory):
-        return format_html(f'<img src="{obj.image}" width="200px">')
+    list_display = ['id','short_text_rus', 'short_text_eng', 'short_text_tkm', 'short_creator_bio_rus', 'short_creator_bio_eng', 'short_creator_bio_tkm', 'found_date', 'creator_birth_date']
+    filter_horizontal = ('imagehistory',)
     def short_text_rus(self, obj): 
         return obj.text_rus[:20] + '...' if len(obj.text_rus) > 10 else obj.text_rus
     short_text_rus.short_description = 'Информация о студии на Русском'
@@ -113,11 +112,27 @@ class StudioHistoryAdmin(admin.ModelAdmin):
 
 @admin.register(StudioHistorySSSR)
 class StudioHistoryAdmin(admin.ModelAdmin):
-    exclude = ['image_base64']
-    list_display = ['id', 'picture','text_rus', 'text_eng', 'text_tkm','found_date']
-    def picture(self, obj:StudioHistorySSSR):
-        return format_html(f'<img src="{obj.image}" width="200px">')
+    list_display = ['id','short_text_rus', 'short_text_eng', 'short_text_tkm','found_date']
+    filter_horizontal = ('imagehistorysssr',)
+    def short_text_rus(self, obj): 
+        return obj.text_rus[:20] + '...' if len(obj.text_rus) > 10 else obj.text_rus
+    short_text_rus.short_description = 'Информация о студии на Русском'
+    def short_text_eng(self, obj): 
+        return obj.text_eng[:20] + '...' if len(obj.text_eng) > 10 else obj.text_eng
+    short_text_eng.short_description = 'Информация о студии на Русском'
+    def short_text_tkm(self, obj): 
+        return obj.text_tkm[:20] + '...' if len(obj.text_rus) > 10 else obj.text_tkm
+    short_text_tkm.short_description = 'Информация о студии на Русском'
     
+@admin.register(Imagehistory)
+class ImagehistoryAdmin(admin.ModelAdmin):
+    list_display=['id','image']
+    
+
+@admin.register(ImagehistorySSSR)
+class ImagehistorySSSRAdmin(admin.ModelAdmin):
+    list_display=['id','image']
+
 
 @admin.register(Trailer)
 class TrilerAdmin(admin.ModelAdmin):

@@ -14,4 +14,7 @@ urlpatterns = [
     path('new_details/<int:new_id>/',views.Newsdetail),
     path('studiohistory/',views.Studiohistory),
     path('studiohistory/sssr',views.StudiohistorySSSR),
+    path('trailer_list/', views.Trailorlist.as_view()),
+    path('trailer_details/<int:trailor_id>/', views.Trailordetail),
+    path('images/',views.Imagehis.as_view())
 ]

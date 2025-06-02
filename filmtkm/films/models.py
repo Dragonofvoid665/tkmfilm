@@ -111,20 +111,6 @@ class PersonModel(models.Model):
     class Meta:
         abstract = True
 
-    def save(self, *args, **kwargs):
-        if self.image:
-            img = Image.open(self.image)
-            buffer = BytesIO()
-            img_format = img.format.lower()  # Получаем формат изображения (например, 'jpeg' или 'png')
-            img.save(buffer, format=img_format)
-            
-            image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
-            
-            self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
-
-            
-        super().save(*args, **kwargs)
-
 class Actors(PersonModel):
     class Meta:
         verbose_name = "Актёр"
@@ -262,15 +248,6 @@ class Film(models.Model):
         verbose_name = "Фильм"
         verbose_name_plural = "Фильмы"
 
-    def save(self, *args, **kwargs):
-        if self.image:
-            img = Image.open(self.image)
-            buffer = BytesIO()
-            img_format = img.format.lower()
-            img.save(buffer, format=img_format)
-            image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
-            self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
-        super().save(*args, **kwargs)
     
 class News(models.Model):
     image = models.ImageField(
@@ -351,19 +328,23 @@ class News(models.Model):
         verbose_name = "Новость"
         verbose_name_plural = "Новости"
 
-    def save(self, *args, **kwargs):
-        if self.image:
-            img = Image.open(self.image)
-            buffer = BytesIO()
-            img_format = img.format.lower()
-            img.save(buffer, format=img_format)
-            
-            image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
-            
-            self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
-            
-            
-        super().save(*args, **kwargs)
+class Imagehistory(models.Model):
+    image = models.ImageField(
+        upload_to='static/images',
+        null=False,
+        blank=False,
+        verbose_name="Фотография",
+        help_text="Нельзя оставить пустым!",
+    )
+
+class ImagehistorySSSR(models.Model):
+    image = models.ImageField(
+        upload_to='static/images',
+        null=False,
+        blank=False,
+        verbose_name="Фотография",
+        help_text="Нельзя оставить пустым!",
+    )
 
 class StudioHistory(models.Model):
     image = models.ImageField(
@@ -428,29 +409,9 @@ class StudioHistory(models.Model):
     class Meta:
         verbose_name = "История студии"
         verbose_name_plural = "История студии"
-
-    def save(self, *args, **kwargs):
-        if self.image:
-            img = Image.open(self.image)
-            buffer = BytesIO()
-            img_format = img.format.lower()
-            img.save(buffer, format=img_format)
-            
-            image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
-            
-            self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
-            
-            
-        super().save(*args, **kwargs)
+    imagehistory = models.ManyToManyField(Imagehistory, related_name="history")
 
 class StudioHistorySSSR(models.Model):
-    image = models.ImageField(
-        null=False,
-        blank=False,
-        upload_to="static/images/",
-        verbose_name="Фотография",
-        help_text="Нельзя оставить пустым!",
-    )
     text_rus = models.TextField(
         null=False,
         blank=False,
@@ -481,20 +442,7 @@ class StudioHistorySSSR(models.Model):
     class Meta:
         verbose_name = "История студии в времена СССР"
         verbose_name_plural = "История студии в времена СССР"
-
-    def save(self, *args, **kwargs):
-        if self.image:
-            img = Image.open(self.image)
-            buffer = BytesIO()
-            img_format = img.format.lower()
-            img.save(buffer, format=img_format)
-            
-            image_base64_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
-            
-            self.image_base64 = f"data:image/{img_format};base64,{image_base64_str}"
-            
-            
-        super().save(*args, **kwargs)
+    imagehistorysssr = models.ManyToManyField(ImagehistorySSSR, related_name="historysssr")
 
 class Trailer(models.Model):
     video = models.FileField(
@@ -505,4 +453,7 @@ class Trailer(models.Model):
     class Meta:
         verbose_name = "Трилер"
         verbose_name_plural = "Трилеры"
+
+
+
 

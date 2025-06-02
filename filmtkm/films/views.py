@@ -6,6 +6,12 @@ from .serializers import *
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import ListAPIView
 
+class Imagehis(ListAPIView):
+    queryset = Imagehistory.objects.all()
+    serializer_class = ImagehisSerializer
+class Trailorlist(ListAPIView):
+    queryset = Trailer.objects.all()
+    serializer_class = TrailorSerializers    
 class Actorlist(ListAPIView):
     queryset = Actors.objects.all()
     serializer_class = ActorlistSerializers
@@ -66,4 +72,10 @@ def Studiohistory(request):
 def StudiohistorySSSR(request):
     studiohistorysssr = StudioHistorySSSR.objects.all() 
     serializer = StudiohistorySSSRSerializers(studiohistorysssr, many=True, context={'request': request})
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def Trailordetail(request, trailor_id):
+    trailors = get_object_or_404(Trailer, id=trailor_id)
+    serializer = TrailordetailSerializers(trailors, context={'request': request})
     return Response(serializer.data)

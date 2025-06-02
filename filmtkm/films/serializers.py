@@ -51,7 +51,17 @@ class NewsdetailSerializers(serializers.ModelSerializer):
         model = News
         fields = ['id', 'title_eng', 'title_rus', 'title_tkm', 'content_rus', 'content_eng', 'content_tkm', 'publication_date']
 
+class ImagehisSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Imagehistory
+        fields = '__all__'
+
+class ImagehisssrSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImagehistorySSSR
+        fields = '__all__'
 class StudiohistorySerializers(serializers.ModelSerializer):
+    imagehistory = ImagehisSerializer(many=True,read_only=True)
     class Meta:
         model = StudioHistory
         fields = '__all__'
@@ -62,20 +72,30 @@ class CreatorSerializers(serializers.ModelSerializer):
         fields = ['creator_bio_rus', 'creator_bio_eng', 'creator_bio_tkm', 'creator_birth_date']
 
 class FilmdetailSerializers(serializers.ModelSerializer):
-    screenwriter = ScreenwriterlistSerializers(read_only=True)  # Изменено: убрано many=True
+    screenwriter = ScreenwriterlistSerializers(many=True,read_only=True) 
     actors = ActorlistSerializers(many=True, read_only=True)
-    director = DirectorlistSerializers(read_only=True)  # Изменено: убрано many=True
+    director = DirectorlistSerializers(many=True,read_only=True) 
     
     class Meta:
         model = Film
         fields = '__all__'
+
+class TrailorSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Trailer
+        fields = ['video']
+
+class TrailordetailSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Trailer
+        fields = ['video']
 
 class StudiohistorySSSRSerializers(serializers.ModelSerializer):
     creator_bio_rus = serializers.SerializerMethodField()
     creator_bio_eng = serializers.SerializerMethodField()
     creator_bio_tkm = serializers.SerializerMethodField()
     creator_birth_date = serializers.SerializerMethodField()
-
+    imagehistorysssr = ImagehisssrSerializer(many=True,read_only=True)
     class Meta:
         model = StudioHistorySSSR
         fields = '__all__'
